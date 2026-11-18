@@ -1,19 +1,11 @@
 import {createServer} from "http";
+import routeHandler from "./routes/route";
 
 const server:Server=createServer((req:IncomingMessage,res:ServerResponse)=>{
     // res.writeHead(200,{"Content-Type":"text/plain"});
     // res.end("Hello World");
-    console.log(req);
-    const url=req.url; // "/","/products","/about"
-    const method=req.method;  //"GET","POST","PUT","DELETE"
-    if(url=="/" && method==="GET"){
-        res.writeHead(200,{"Content-Type":"text/plain"});
-        // res.end("<h1>Welcome to the Home Page</h1>");
-    }else{
-        // res.writeHead(200,{"Content-Type":"text/html"});
-        // res.end("<h1>Welcome to the About Page</h1>");
-        console.log("This route is not defined");
-    }
+    // console.log(req);
+      routeHandler(req,res);
 
 })
 
@@ -29,3 +21,15 @@ server.listen(5000,()=>{
 // Status Code
 // Message
 // Headers
+
+// Content Type 
+// JSON XML PLAINTEXT
+
+
+// FIle organization
+// 3 main component in file organization
+// 1)route ->route handling
+// 2)controller-> controller handling & sending response to client
+// 3)service ->db operation
+
+
