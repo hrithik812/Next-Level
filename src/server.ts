@@ -78,6 +78,22 @@ app.post("/api/v1/users",async(req:Request,res:Response)=>{
    
 })
 
+app.get("/api/v1/users",async(req:Request,res:Response)=>{
+    try{ 
+      const result=await pool.query(`SELECT * FROM users`)
+      console.log("Result----",result);
+
+
+    }catch(err:any){
+      res.status(500).json({
+      success:false,
+      message:err?.message,
+      error:err
+     })
+    }
+
+
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
