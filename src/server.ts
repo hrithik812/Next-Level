@@ -82,7 +82,11 @@ app.get("/api/v1/users",async(req:Request,res:Response)=>{
     try{ 
       const result=await pool.query(`SELECT * FROM users`)
       console.log("Result----",result);
-
+      res.status(200).json({
+      success:true,
+      message:'User Fetched',
+      data:result.rows[0]
+     })
 
     }catch(err:any){
       res.status(500).json({
