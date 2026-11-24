@@ -126,8 +126,10 @@ app.get("/api/v1/users/:id",async(req:Request,res:Response)=>{
 
 app.put("/api/v1/users/:id",async(req:Request,res:Response)=>{
     try{ 
-      const {name,age,password,is_active,id}=req.params;
-      const result=await pool.query(`Update users set name=COALESCE($1,name),age=COALESCE($2,age),password=COALESCE($3,password),is_active=($4,is_active) FROM users where id=$5 RETURNING *`,[name ?? null,age??null,password??null,is_active??null,id],)
+      const {id}=req.params;
+      const {name,age,password,is_active}=req.body;
+      
+      const result=await pool.query(`Update users set name=COALESCE($1,name),age=COALESCE($2,age),password=COALESCE($3,password),is_active=COALESCE($4,is_active) where id=$5 RETURNING *`,[name ?? null,age??null,password??null,is_active??null,id],)
 
       if(result?.rowCount==0){
        return res.status(200).json({
