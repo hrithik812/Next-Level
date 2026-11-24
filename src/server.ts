@@ -85,7 +85,7 @@ app.get("/api/v1/users",async(req:Request,res:Response)=>{
       res.status(200).json({
       success:true,
       message:'User Fetched',
-      data:result.rows[0]
+      data:result.rows
      })
 
     }catch(err:any){
@@ -98,7 +98,58 @@ app.get("/api/v1/users",async(req:Request,res:Response)=>{
 
 
 })
+app.get("/api/v1/users/:id",async(req:Request,res:Response)=>{
+    try{ 
+      const {id}=req.params;
+      const result=await pool.query(`SELECT * FROM users where id=$1`,[id])
+      if(result?.rowCount==0){
+       return res.status(200).json({
+       success:false,
+       message:'No User Fetched',
+     })
+      }
+      res.status(200).json({
+      success:true,
+      message:'User Fetched',
+      data:result.rows[0]
+     })
 
+    }catch(err:any){
+      res.status(500).json({
+      success:false,
+      message:err?.message,
+      error:err
+     })
+    }
+})
+
+
+app.put("/api/v1/users/:id",async(req:Request,res:Response)=>{
+    try{ 
+      const {name,age,password,is_active,id}=req.params;
+      const result=await pool.query(`Update users set name=COALESCE($1,name),age=COALESCE($2,age),password=COALESCE($3,password),is_active=($4,is_active) FROM users where id=$5 RETURNING *`,[name ?? null,age??null,password??null,is_active??null,id],)
+
+      if(result?.rowCount==0){
+       return res.status(200).json({
+       success:false,
+       message:'No User Found',
+     })
+      }
+      
+      res.status(200).json({
+      success:true,
+      message:'User Updated',
+      data:result.rows[0]
+     })
+
+    }catch(err:any){
+      res.status(500).json({
+      success:false,
+      message:err?.message,
+      error:err
+     })
+    }
+})
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
