@@ -129,7 +129,7 @@ app.put("/api/v1/users/:id",async(req:Request,res:Response)=>{
       const {id}=req.params;
       const {name,age,password,is_active}=req.body;
       
-      const result=await pool.query(`Update users set name=COALESCE($1,name),age=COALESCE($2,age),password=COALESCE($3,password),is_active=COALESCE($4,is_active) where id=$5 RETURNING *`,[name ?? null,age??null,password??null,is_active??null,id],)
+      const result=await pool.query(`Update users set name=COALESCE($1,name),age=COALESCE($2,age),password=COALESCE($3,password),is_active=COALESCE($4,is_active) updated_at=NOW() where id=$5 RETURNING *`,[name ?? null,age??null,password??null,is_active??null,id],)
 
       if(result?.rowCount==0){
        return res.status(200).json({
@@ -140,7 +140,7 @@ app.put("/api/v1/users/:id",async(req:Request,res:Response)=>{
       
       res.status(200).json({
       success:true,
-      message:'User Updated',
+      message:'User Updated successfully',
       data:result.rows[0]
      })
 
